@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@config "../../tailwind.config.js";
+
+:root {
+  @apply bg-white text-primary;
+}
+
+html {
+  @apply scroll-smooth;
+}
