@@ -4,9 +4,9 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                primary: '#d9d9da',
-                secondary: '#ffc86b',
-                third: '#717275'
+                primary: '#444cf7',
+                secondary: '#13006c',
+                highlight: '#7f84e4',
             },
         },
     },
@@ -17,7 +17,7 @@ module.exports = {
                 ":root": {
                     "--primary": theme("colors.primary"),
                     "--secondary": theme("colors.secondary"),
-                    "--third": theme("colors.third")
+                    "--highlight": theme("colors.highlight"),
                 },
             });
         },],

@@ -1,10 +1,26 @@
 @import "tailwindcss";
 @config "../../tailwind.config.js";
+* {
+  @apply box-border font-[cursive];
+}
 
 :root {
-  @apply bg-white text-primary;
+  @apply bg-white;
 }
 
 html {
   @apply scroll-smooth;
+}
+
+.spinnerOn {
+  border: 3px solid #d2d2d2;
+  border-top: 3px solid #202020;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1.5s linear infinite;
+}
+
+:deep(input:not(input[type="checkbox"])) {
+  padding: 12px 6px;
 }
