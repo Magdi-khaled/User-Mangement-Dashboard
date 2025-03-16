@@ -16,7 +16,7 @@ const userStore = useUserStore();
 const showInfo = ref<number | null>(null);
 const currentPage = ref<number>(1);
 const pageSize = ref<number>(4);
-const tableBody = ref<HTMLElement | null>(null);
+const searchText = ref<HTMLElement | null>(null);
 
 
 const props = defineProps<{ users: User[] }>();
@@ -69,13 +69,16 @@ const islastRow = () => {
                     <th class="sm:py-4 sm:px-4 px-6 py-2">name</th>
                     <th class="sm:py-4 sm:px-4 px-6 py-2">email</th>
                     <th class="sm:py-4 sm:px-4 px-6 py-2">role</th>
-                    <th class="sm:py-4 sm:px-4 px-6 py-2">status</th>
-                    <th class="sm:py-4 sm:px-4 px-6 py-2 rounded-tr-2xl">
+                    <th class="sm:py-4 sm:px-4 px-6 py-2" v-permission>status</th>
+                    <th class="sm:py-4 sm:px-4 px-6 py-2 rounded-tr-2xl" v-permission>
                         details</th>
                 </thead>
             </table>
-            <p class="text-center m-5 mt-10 p-5 text-primary font-bold text-lg md:text-xl lg:text-2xl capitalize">no
-                users found...
+            <p v-if="searchText" class="text-center m-5 mt-10 p-5 text-primary font-bold text-lg md:text-xl lg:text-2xl capitalize">
+                use fliter to show users here...
+            </p>
+            <p class="text-center m-5 mt-10 p-5 text-primary font-bold text-lg md:text-xl lg:text-2xl capitalize">
+                use fliter to show users here...
             </p>
         </div>
         <table v-else class="w-full my-6 text-sm md:text-lg">
@@ -85,22 +88,22 @@ const islastRow = () => {
                 <th class="sm:py-4 sm:px-4 px-6 py-2">name</th>
                 <th class="sm:py-4 sm:px-4 px-6 py-2">email</th>
                 <th class="sm:py-4 sm:px-4 px-6 py-2">role</th>
-                <th class="sm:py-4 sm:px-4 px-6 py-2">status</th>
-                <th class="sm:py-4 sm:px-4 px-6 py-2 rounded-tr-2xl">
+                <th class="sm:py-4 sm:px-4 px-6 py-2" v-permission>status</th>
+                <th class="sm:py-4 sm:px-4 px-6 py-2 rounded-tr-2xl" v-permission>
                     details
                 </th>
             </thead>
-            <tbody class="text-center relative text-primary" ref="tableBody">
+            <tbody class="text-center relative text-primary">
                 <tr v-for="(item, index) in paginateItem" :key="index" class="h-20 odd:bg-white even:bg-gray-100">
                     <td class="py-2 px-4">{{ (currentPage - 1) * pageSize + index + 1 }}</td>
                     <td class="py-2 px-4 capitalize">{{ item.name }}</td>
                     <td class="py-2 px-4">{{ item.email }}</td>
                     <td class="py-2 px-4 capitalize">{{ item.role }}</td>
-                    <td class="py-2 px-4 capitalize"
+                    <td class="py-2 px-4 capitalize" v-permission
                         :class="{ 'text-green-600': item.status === 'active', 'text-red-600': item.status === 'not active' }">
                         {{ item.status }}
                     </td>
-                    <td class="py-2 px-4 relative">
+                    <td class="py-2 px-4 relative" v-permission>
                         <div v-if="authStore.getRole === 'admin' || authStore.getRole === 'manager'">
                             <button @click="toggleShowInfo(index)" class="m-auto cursor-pointer"
                                 :class="{ active: showInfo === index }">

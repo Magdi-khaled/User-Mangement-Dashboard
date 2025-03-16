@@ -46,6 +46,8 @@ export const useUserStore = defineStore("users", {
     async editUser(id: number, name: string, role: string, status: string) {
       try {
         await apiDelay();
+        console.log(name);
+        
         const userIndex = this.users.findIndex((u) => u.id === id);
 
         if (userIndex !== -1) {
@@ -61,17 +63,17 @@ export const useUserStore = defineStore("users", {
     async deleteUser(id: number) {
       try {
         await apiDelay();
-        const userIndex = this.users.findIndex((u) => u.id === id);
 
-        if (userIndex !== -1) {
-          const deletedUser = { ...this.users[userIndex] };
-          this.users[userIndex] = deletedUser;
-        } else {
+        const userIndex = this.users.findIndex((u) => u.id === id);
+        if (userIndex === -1) {
           console.error("User Not Found");
+          return;
         }
-        this.users = this.users.filter((u) => u.id !== id);
+        // Remove the user from the list
+        this.users.splice(userIndex, 1);
+        console.log(`User with ID ${id} has been deleted.`);
       } catch (err) {
-        console.error("Deleting User Error", err);
+        console.error("Error deleting user:", err);
       }
     },
   },

@@ -1,78 +1,13 @@
 <script setup lang="ts">
 import AppButton from '../../components/AppButton.vue';
 import AppInput from '../../components/AppInput.vue';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 const email = ref<string>('');
 const newPassword = ref<string>('');
 const confirmPassword = ref<string>('');
-const otpCode = ref<string | null>(null);
-const entredOtp = ref<string | null>(null);
 const spinnerOn = ref<boolean>(false);
-const verified = ref<boolean>(false);
-const goReset = ref<boolean>(false);
-const showpass1 = ref<boolean>(false);
-const showpass2 = ref<boolean>(false);
 
-const sendOtp = async (): void => {
-    try {
-        otpCode.value = Math.floor(100000 + Math.random() * 900000);
-        console.log(otpCode.value);
-        spinnerOn.value = true;
-        // await ResetPassword({ email: email.value, otp: otpCode.value }).then(() => {
-        //     setTimeout(() => {
-        //         spinnerOn.value = false;
-        //         verified.value= true;
-        //     }, 1500);
-        // });
-    } catch (err) {
-        console.error('Send OTP Error: ', err.message);
-    }
-};
-const verifyOtp = async (): void => {
-    try {
-        if (otpCode.value) {
-            spinnerOn.value = true;
-            setTimeout(() => {
-                spinnerOn.value = false;
-                goReset.value = true;
-            }, 1500);
-        }
-    } catch (err) {
-        console.error('Send OTP Error: ', err.message);
-    }
-};
-
-const changePassword = async (): void => {
-    try {
-        spinnerOn.value = true;
-        success.value = true;
-        setTimeout(() => {
-            spinnerOn.value = false;
-            success.value = false;
-            // authUser.value ? $router.push('User-Login') : $router.push('AD-Login');
-        }, 1500);
-    } catch (err) {
-        console.error('Send OTP Error: ', err.message);
-    }
-};
-
-const showPassword = async (): void => {
-    var x = document.getElementById("Password");
-    if (x.type === "password") {
-        showpass.value = !showpass.value;
-        x.type = "text";
-    } else {
-        showpass.value = !showpass.value;
-        x.type = "password";
-    }
-};
-
-
-const togglePasswordVisibility = (id): void => {
-    if (id == 1) showpass1.value = !showpass1.value;
-    else showpass2.value = !showpass2.value;
-}
 </script>
 
 <template>
@@ -98,51 +33,11 @@ const togglePasswordVisibility = (id): void => {
                     <h1 class="mt-4 text-2xl font-bold text-secondary sm:text-3xl md:text-4xl">UM Reset Password
                     </h1>
 
-                    <form v-if="!verified" @submit.prevent="sendOtp" class="grid gap-y-4 my-4">
+                    <form @submit.prevent="" class="grid gap-y-4 my-4">
                         <AppInput label="Email" name="email" type="email" placeholder="email address" v-model="email"
                             class="col-span-6" />
-                        <AppButton @click="sendOtp" class="col-span-6">
+                        <AppButton  class="col-span-6">
                             <p v-if="!spinnerOn">search</p>
-                            <div v-else class="spinnerOn border-2 border-[#fff] m-auto rounded-full" />
-                        </AppButton>
-                    </form>
-
-                    <form v-else-if="!goReset" @submit.prevent="verifyOtp" class="grid gap-y-4 my-4">
-                        <div class="col-span-6">
-                            <label for="otp" class="block text-sm font-medium text-gray-700">OTP Code </label>
-                            <input type="text" id="otp" name="otp" v-model="entredOtp" class="mt-1 w-full px-2 py-2 sm:py-3 rounded-md border border-gray-400
-                            bg-white text-sm text-gray-700 shadow-xs" placeholder="Enter 6-digit otp" />
-                        </div>
-                        <AppButton @click="verifyOtp" class="col-span-6">
-                            <p v-if="!spinnerOn">verify</p>
-                            <div v-else class="spinnerOn border-2 border-[#fff] m-auto rounded-full" />
-                        </AppButton>
-                    </form>
-                    <form v-else @submit.prevent="changePassword" class="grid gap-y-4 my-4" href="#reset-password">
-                        <div class="col-span-6 relative">
-                            <label for="newPassword" class="block text-sm font-medium text-gray-700"> New Password
-                            </label>
-                            <input :type="showpass1 ? 'text' : 'password'" id="newPassword" name="newPassword"
-                                v-model="newPassword" class="mt-1 w-full px-2 py-2 sm:py-3 rounded-md border border-gray-400
-                            bg-white text-sm text-gray-700 shadow-xs" placeholder="new password" />
-                            <div v-if="newPassword" @click="togglePasswordVisibility(1)"
-                                class="absolute right-[2%] top-[50%] cursor-pointer">
-                                <i :class="showpass1 ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-                            </div>
-                        </div>
-                        <div class="col-span-6 relative">
-                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
-                                Repeat New Password</label>
-                            <input :type="showpass2 ? 'text' : 'password'" id="confirmPassword" name="confirmPassword"
-                                v-model="confirmPassword" class="mt-1 w-full px-2 py-2 sm:py-3 rounded-md border border-gray-400
-                            bg-white text-sm text-gray-700 shadow-xs" placeholder="repeat new password" />
-                            <div v-if="confirmPassword" @click="togglePasswordVisibility(2)"
-                                class="absolute right-[2%] top-[50%] cursor-pointer">
-                                <i :class="showpass2 ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-                            </div>
-                        </div>
-                        <AppButton @click="verifyOtp" class="col-span-6">
-                            <p v-if="!spinnerOn">change password</p>
                             <div v-else class="spinnerOn border-2 border-[#fff] m-auto rounded-full" />
                         </AppButton>
                     </form>

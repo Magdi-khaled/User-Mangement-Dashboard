@@ -4,17 +4,26 @@ import "./assets/style.css";
 import { pinia } from "./stores";
 import router from "./router";
 import Loading from "./components/Loading.vue";
-import { handleSessionExpiry } from "./composables/useToken"; // Import the session expiry function
+import { handleSessionExpiry } from "./composables/useToken";
+import { getUserRole } from "./composables/useAuth";
 
 const app = createApp(App);
 
-// app.directive("highlight", {
-//   mounted(el) {
-//     el.classList.add("custom-style");
-//   },
-// });
+// Custom directive
+app.directive("permission", {
+  async mounted(el) {
+    const role = await getUserRole();
+    const allowedRoles = ["admin", "manager"];
+    if (allowedRoles.includes(role)) {
+      return true;
+    } else {
+      el.style.display = "none";
+      //   navigateDashboard();
+      return false;
+    }
+  },
+});
 
-// Check if the token is expired when the app loads
 handleSessionExpiry(router);
 
 app.component("Loading", Loading);

@@ -1,4 +1,3 @@
-// sessionUtils.ts
 export function setTokensetToken(
   token: string,
   expirationTimeInMinutes: number,

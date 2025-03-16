@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import AppButton from '../../components/AppButton.vue';
 import AppInput from '../../components/AppInput.vue';
+import AppTeleport from '../../components/AppTeleport.vue';
+
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../stores/auth';
@@ -8,12 +10,22 @@ import { useAuthStore } from '../../stores/auth';
 const authStore = useAuthStore();
 const router = useRouter();
 
+const failed = ref<boolean>(false);
 const email = ref<string | null>(authStore.user.email);
 const password = ref<string | null>(authStore.user.password);
+
 
 let spinnerOn = ref<boolean>(false);
 let rememberme = ref<boolean>(false);
 
+const validateEmail = () => {
+    if (!email.value) return 'Email is required.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) return 'Invalid email format.';
+    return null;
+};
+const validatePassword = () => {
+    if (!password.value) return 'Password is required.';
+};
 const login = async () => {
     try {
         await authStore.login(email.value ?? "", password.value ?? "");
@@ -21,7 +33,10 @@ const login = async () => {
             console.log('isAuthenticated', authStore.isLoggedIn);
             router.push({ name: 'Home' });
         }
-        router.push({ name: 'Home' });
+        else {
+            failed.value = true;
+            setTimeout(() => { failed.value = false }, 2000);
+        }
     }
     catch (err) {
         console.error(err);
@@ -30,6 +45,9 @@ const login = async () => {
 </script>
 
 <template>
+    <AppTeleport :show="failed" :state="false">
+        <i class="fa-solid fa-circle-exclamation"></i> Error : Wrong Input Credentials
+    </AppTeleport>
     <section class="bg-white">
         <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
             <aside
@@ -58,9 +76,9 @@ const login = async () => {
 
                     <form @submit.prevent="login" class="mt-4 grid grid-cols-6 gap-4">
                         <AppInput label="Email" name="email" type="email" placeholder="email address" v-model="email"
-                            class="col-span-6" />
+                            class="col-span-6" :validator="validateEmail" />
                         <AppInput label="Password" name="password" type="password" placeholder="Password"
-                            v-model="password" class="col-span-6" />
+                            v-model="password" class="col-span-6" :validator="validatePassword" />
 
                         <div class="col-span-6 mt-2 w-full sm:w-[30em] flex justify-between">
                             <label for="MarketingAccept" class="flex items-center gap-2">

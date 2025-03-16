@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import AppButton from '../components/AppButton.vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import { navigateDashboard } from '../composables/useNavigate';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -18,14 +19,6 @@ const logout = async () => {
     }
 }
 
-const dashboard = (): Object => {
-    if (authStore.getRole === 'admin')
-        return { name: 'AdminDashboard' };
-    else if (authStore.getRole === 'manager')
-        return { name: 'ManagerDashboard' };
-    else
-        return { name: 'ViewerDashboard' };
-};
 </script>
 
 <template>
@@ -47,9 +40,9 @@ const dashboard = (): Object => {
                 </li>
                 <li v-if="authStore.isLoggedIn"
                     class="text-primary capitalize font-semibold hover:text-highlight duration-100">
-                    <routerLink :to="dashboard()" class="block w-full h-full py-2"> users </routerLink>
+                    <routerLink :to="navigateDashboard()" class="block w-full h-full py-2"> users </routerLink>
                 </li>
-                <li v-if="authStore.getRole === 'admin'"
+                <li v-if="authStore.isLoggedIn && authStore.getRole === 'admin'"
                     class="text-primary capitalize font-semibold hover:text-highlight duration-100">
                     <routerLink :to="{ name: 'AddUser' }" class="block w-full h-full py-2 whitespace-nowrap">add
                         user</routerLink>

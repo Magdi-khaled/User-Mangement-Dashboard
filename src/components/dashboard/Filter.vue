@@ -3,19 +3,20 @@ import AppInput from "../AppInput.vue";
 import { watch, ref, defineEmits } from "vue";
 import { useUserStore } from "../../stores/users";
 import type { User } from "../../types/user";
+import type { getUserRole } from "../../composables/useAuth";
 const userStore = useUserStore();
 
 let filterResults = ref<User[]>([]);
 const searchText = ref<string>("");
-const searchLoading = ref<boolean>(false);
 const selectedRole = ref<string>("");
 const selectedStatus = ref<string>("");
+const searchLoading = ref<boolean>(false);
 
+
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 const emit = defineEmits(["update:filteredArray"]);
 
-// Debounce variables
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-
+emit("update:filteredArray", filterResults.value);
 const filterUsers = async () => {
     if (searchText.value) {
         filterResults.value = await userStore.fetchUsers(searchText.value);
@@ -29,12 +30,10 @@ const filterUsers = async () => {
     emit("update:filteredArray", filterResults.value);
 };
 
-// Watchers to trigger filtering with debounce
 watch([searchText, selectedRole, selectedStatus], () => {
     searchLoading.value = true;
-    // Clear any previous timer before starting a new one
     if (debounceTimer) clearTimeout(debounceTimer);
-    // Set a new timeout (debounced)
+
     debounceTimer = setTimeout(() => {
         searchLoading.value = false;
         filterUsers();
@@ -54,10 +53,11 @@ watch([searchText, selectedRole, selectedStatus], () => {
         </div>
 
         <AppInput name="sortRole" type="select" optionsType="Sort by role..." :options="['admin', 'manager', 'viewer']"
-            v-model="selectedRole" class="col-span-2 sm:col-span-1" />
+            v-model="selectedRole"
+            :class="{ 'col-span-2': getUserRole === 'viewer', 'col-span-2 sm:col-span-1': getUserRole != 'viewer' }" />
 
-        <AppInput name="sortState" type="select" optionsType="Sort by status..." :options="['active', 'not active']"
-            v-model="selectedStatus" class="col-span-2 sm:col-span-1" />
+        <AppInput name="sortState" type="select" optionsType="Sort by status..." :options="[' active', 'not active']"
+            v-model="selectedStatus" class="col-span-2 sm:col-span-1" v-permission />
     </div>
 </template>
 

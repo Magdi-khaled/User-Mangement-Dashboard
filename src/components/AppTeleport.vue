@@ -12,8 +12,8 @@ defineProps({
 </script>
 <template>
     <teleport to='body'>
-        <div v-show="show" class="fixed top-4 left-4 p-3 sm:p-6"
-            :class="{ 'bg-green-900': state, 'bg-red-900 ': !state }">
+        <div v-show="show" class="fixed top-4 left-4 p-3 sm:p-5 "
+            :class="{ 'bg-green-900 text-white': state, 'bg-red-400 ': !state }">
             <p class="text-sm sm:text-md capitalize">
                 <slot />
             </p>

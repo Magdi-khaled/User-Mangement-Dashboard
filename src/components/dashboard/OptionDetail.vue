@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import AppTeleport from '../AppTeleport.vue';
+import AppTeleport from '../AppTeleport.vue';
 import { ref } from 'vue';
 import type { PropType } from 'vue';
 
@@ -7,6 +7,7 @@ import AppButton from '../AppButton.vue';
 import ConfirmTeleport from './ConfirmTeleport.vue';
 
 import { useAuthStore } from '../../stores/auth';
+import { useUserStore } from '../../stores/users';
 import type { User } from '../../types/user';
 
 const props = defineProps({
@@ -25,12 +26,21 @@ const props = defineProps({
 });
 
 const authStore = useAuthStore();
+const userStore = useUserStore();
+const success = ref<boolean>(false);
 const confirm = ref<boolean>(false);
 
 
-const handleDeleteController = (id: number) => {
-    console.log(id);
-    confirm.value = false;
+const deleteUser =  async (id: number) => {
+    try {
+        await userStore.deleteUser(id);
+        success.value = true;
+        setTimeout(() => { success.value = false }, 2000);
+        confirm.value = false;
+    }
+    catch (err) {
+        console.error('delete User Error', err);
+    }
 };
 
 const InfoRoute = (id: number): any => {
@@ -46,6 +56,10 @@ const EditRoute = (id: number): any => {
 </script>
 
 <template>
+    
+    <AppTeleport :show="success" :state="true">
+        <i class="fa-solid fa-check-double"></i> User deleted Successfully
+    </AppTeleport>
     <div v-show="props.show" class="absolute right-[60%] z-50 border border-primary rounded-xl text-primary bg-white"
         :class="{ 'top-[50%]': !props.lastRow, 'top-[-90%]': props.lastRow }">
         <ul v-if="authStore.getRole === 'manager' || authStore.getRole === 'admin'">
@@ -75,7 +89,7 @@ const EditRoute = (id: number): any => {
                 <p>email: {{ props.user.email }}</p>
                 <p>role: {{ props.user.role }}</p>
                 <div class="flex items-center justify-end gap-4 mt-8">
-                    <AppButton class="w-4/12" @click="handleDeleteController(props.user.id)">
+                    <AppButton class="w-4/12" @click="deleteUser(props.user.id)">
                         confirm
                     </AppButton>
                     <AppButton class="w-4/12" @click="confirm = false">
