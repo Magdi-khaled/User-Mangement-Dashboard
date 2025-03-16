@@ -23,3 +23,176 @@ For client-side data caching, I rely on **localStorage** for storing data persis
 
 For scaling user permissions, I implemented **Role-Based Access Control (RBAC)**. Users are assigned roles with specific permissions, which are managed on the backend and passed to the frontend upon authentication. I use **Pinia** to store user roles and permissions, ensuring they are accessible across the application. On the frontend, I conditionally render components and restrict access to certain routes based on the user's permissions, using Vue Router guards for route protection.
 This approach ensures the application can scale efficiently with hundreds of different permission types while maintaining a clean and modular architecture.
+
+# Vue 3 + TypeScript Project Setup
+
+## Prerequisites
+
+Ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (Recommended: latest LTS version)
+- [npm](https://www.npmjs.com/) (comes with Node.js) or [pnpm](https://pnpm.io/) or [yarn](https://yarnpkg.com/)
+
+## How to Clone This Project
+
+To clone this project and set it up, run the following commands:
+
+```sh
+# Clone the repository
+git clone <repository_url>
+
+# Navigate into the project directory
+cd diverge-assesment
+
+# Install dependencies
+npm install
+```
+
+Then, follow the setup instructions below.
+
+## Project Setup
+
+### 1. Create a New Vue 3 + TypeScript Project
+
+Run the following command in your terminal:
+
+```sh
+npm create vue@latest my-vue-app -- --template typescript
+```
+
+Or using yarn:
+
+```sh
+yarn create vue@latest my-vue-app --template typescript
+```
+
+Then navigate into the project directory:
+
+```sh
+cd my-vue-app
+```
+
+### 2. Install Dependencies
+
+Run the following command to install the required dependencies:
+
+```sh
+npm install
+```
+
+Or using yarn:
+
+```sh
+yarn install
+```
+
+### 3. Install Additional Dependencies
+
+To match the given dependencies, install the following:
+
+```sh
+npm install @tailwindcss/vite axios pinia tailwindcss vee-validate vue-router yup
+```
+
+And for development dependencies:
+
+```sh
+npm install -D @vitejs/plugin-vue @vue/tsconfig typescript vite vue-tsc
+```
+
+### 4. Configure Tailwind CSS
+
+Initialize Tailwind CSS configuration:
+
+```sh
+npx tailwindcss init -p
+```
+
+Then update `tailwind.config.js`:
+
+```js
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+In `src/main.ts`, import Tailwind CSS:
+
+```ts
+import "./index.css";
+```
+
+And in `index.css`:
+
+```css
+@import "tailwind";
+```
+
+### 5. Run the Development Server
+
+Start the project with:
+
+```sh
+npm run dev
+```
+
+Or using yarn:
+
+```sh
+yarn dev
+```
+
+### 6. Build for Production
+
+To build the project:
+
+```sh
+npm run build
+```
+
+Or using yarn:
+
+```sh
+yarn build
+```
+
+### 7. Preview the Build
+
+To preview the production build:
+
+```sh
+npm run preview
+```
+
+## Project Structure
+
+After setting up, your project structure should look like this:
+
+```
+my-vue-app/
+├── src/
+│   ├── components/
+│   ├── views/
+│   ├── router/
+│   ├── stores/
+│   ├── main.ts
+│   ├── App.vue
+│   ├── index.css
+├── public/
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+├── tailwind.config.js
+```
+
+## Notes
+
+- **Pinia** is used for state management.
+- **Vee-Validate & Yup** are used for form validation.
+- **Vue Router** is used for routing.
+- **Tailwind CSS** is used for
