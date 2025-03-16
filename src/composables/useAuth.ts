@@ -1,5 +1,5 @@
 export const isAuthenticated = (): boolean => {
-  return !!localStorage.getItem("token");
+  return !!localStorage.getItem("authToken");
 };
 
 export const getUserRole = (): "admin" | "manager" | "viewer" | null => {

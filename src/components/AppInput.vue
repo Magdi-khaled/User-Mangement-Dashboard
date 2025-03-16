@@ -53,7 +53,7 @@ const inputClass = computed(() => ({
 
         <!-- Input Field -->
         <input v-if="props.type !== 'select'" :type="props.type" v-model="inputValue" :placeholder="props.placeholder"
-            :id="props.name" :name="props.name" :disabled="props.hide" autocomplete="off" :class="['border p-2 w-full rounded-md', inputClass,
+            :id="props.name" :name="props.name" :disabled="props.hide" autocomplete="on" :class="['border p-2 w-full rounded-md', inputClass,
                 {
                     'bg-gray-200 border-gray-400 cursor-not-allowed': props.hide, 'bg-white border-primary': !props.hide,
                     'capitalize': props.hide && props.type !== 'email'

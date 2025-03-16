@@ -5,32 +5,34 @@ import AppInput from '../../components/AppInput.vue';
 import AppButton from '../../components/AppButton.vue';
 
 import { ref } from 'vue';
-import { useUsersStore } from '../../stores/users';
-import { users } from '../../composables/useUsers';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '../../stores/users';
+import { navigateDashboard } from '../../composables/useNavigate';
 
 // data 
-const usersStore = useUsersStore();
+const userStore = useUserStore();
+const router = useRouter();
 const roles = ref<string[]>(["admin", "manager", "viewer"]);
 const states = ref<string[]>(["active", "not active"]);
 
-const id = ref<number | null>(users.length + 1);
 const name = ref<string | null>("");
 const email = ref<string | null>("");
 const password = ref<string | null>("");
 const role = ref<string | null>("");
 const status = ref<string | null>("");
+
 // 
-const addUser = async () => {
+const createUser = async () => {
     try {
-        await usersStore.addUser({
-            id: id.value,
+        await userStore.createUser({
             name: name.value,
             email: email.value,
             password: password.value,
             role: role.value,
             status: status.value
         });
-        router.push({ name: 'Login' });
+
+        router.push(navigateDashboard());
     }
     catch (err) {
         console.error('Add User Error', err);
@@ -45,7 +47,7 @@ const addUser = async () => {
             <i class="fa-solid fa-user-plus"></i> add user form
         </h1>
 
-        <form @submit.prevent="addUser" class="w-full sm:w-8/12 p-3 sm:p-6 border border-primary rounded-2xl">
+        <form @submit.prevent="createUser" class="w-full sm:w-8/12 p-3 sm:p-6 border border-primary rounded-2xl">
             <AppInput label="user name" name="name" type="text" placeholder="Enter User Name"
                 v-model:modelValue="name" />
             <AppInput label="email address" name="email" type="email" placeholder="Enter email address"
@@ -57,7 +59,7 @@ const addUser = async () => {
                 v-model:modelValue="status" />
 
             <div class="flex justify-end">
-                <AppButton @click="addUser" class="w-4/12 sm:w-3/12">
+                <AppButton @click="createUser" class="w-4/12 sm:w-3/12">
                     add user
                 </AppButton>
             </div>

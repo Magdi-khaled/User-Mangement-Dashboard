@@ -6,32 +6,35 @@ import AppButton from '../../components/AppButton.vue';
 
 import { ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useUsersStore } from '../../stores/users';
+import { useUserStore } from '../../stores/users';
+import { useAuthStore } from '../../stores/auth';
 import { users } from '../../composables/useUsers';
+import { navigateDashboard } from '../../composables/useNavigate';
 
+const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 console.log(route.params.id);
 
 // data 
-const usersStore = useUsersStore();
+const userStore = useUserStore();
 const roles = ref<string[]>(["admin", "manager", "viewer"]);
 const states = ref<string[]>(["active", "not active"]);
 const userId = +route.params.id;
 
-const currentUser = computed(() => {
+const currentUser = computed((): User => {
     return users.find(user => user.id === userId);
 });
-
-const name = ref<string | null>(currentUser.value.name);
-const role = ref<string | null>(currentUser.value.role);
-const status = ref<string | null>(currentUser.value.status);
+const id = ref<number>(+route.params.id);
+const name = ref<string>(currentUser.value.name);
+const role = ref<string>(currentUser.value.role);
+const status = ref<string>(currentUser.value.status);
 
 // 
 const editUser = async () => {
     try {
-        await usersStore.editUser(name.value, role.value, status.value);
-        router.push({ name: 'Login' });
+        await userStore.editUser(id.value, name.value, role.value, status.value);
+        router.push(navigateDashboard());
     }
     catch (err) {
         console.error('Add User Error', err);

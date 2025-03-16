@@ -4,7 +4,7 @@ defineProps<{
     totalPages: number;
     nextPage: () => void;
     prevPage: () => void;
-    show?: boolean; // Optional prop
+    show?: boolean;
 }>();
 </script>
 

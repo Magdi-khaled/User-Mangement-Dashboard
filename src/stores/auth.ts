@@ -1,7 +1,11 @@
 import { defineStore } from "pinia";
 import type { AuthState } from "../types/auth";
 import { users } from "../composables/useUsers";
+
+import { setTokensetToken } from "../composables/useToken";
+
 import { isAuthenticated, getUserRole } from "../composables/useAuth";
+import axios from "axios";
 
 export const useAuthStore = defineStore("auth", {
   state: (): AuthState => ({
@@ -26,10 +30,8 @@ export const useAuthStore = defineStore("auth", {
         const existUser = await users.find(
           (user) => email == user.email && password == user.password
         );
-
         if (existUser) {
-          localStorage.setItem("token", email);
-          localStorage.setItem("role", existUser.role);
+          setTokensetToken(email, 30, existUser.role ?? "null");
           this.isAuthenticated = isAuthenticated();
           this.role = getUserRole();
           this.user = { email, password };

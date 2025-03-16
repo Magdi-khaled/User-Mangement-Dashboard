@@ -19,8 +19,9 @@ const login = async () => {
         await authStore.login(email.value ?? "", password.value ?? "");
         if (authStore.isLoggedIn) {
             console.log('isAuthenticated', authStore.isLoggedIn);
-            await router.push({ name: 'Home' });
+            router.push({ name: 'Home' });
         }
+        router.push({ name: 'Home' });
     }
     catch (err) {
         console.error(err);

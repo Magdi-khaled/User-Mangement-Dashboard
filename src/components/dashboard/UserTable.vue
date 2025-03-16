@@ -7,13 +7,15 @@ import AppButton from '../AppButton.vue';
 import type { User } from '../../types/user';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../stores/auth';
+import { useUserStore } from '../../stores/users';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const showInfo = ref<number | null>(null);
 const currentPage = ref<number>(1);
-const pageSize = ref<number>(6);
+const pageSize = ref<number>(4);
 const tableBody = ref<HTMLElement | null>(null);
 
 
@@ -24,6 +26,7 @@ const totalPages = computed(() => {
 });
 
 const paginatedItems = computed(() => {
+    // return props.users;
     const startIndex = (currentPage.value - 1) * pageSize.value;
     const endIndex = startIndex + pageSize.value;
     return props.users.slice(startIndex, endIndex);
@@ -33,19 +36,28 @@ const toggleShowInfo = (index: number | null) => {
     showInfo.value = showInfo.value === index ? null : index;
 };
 
+const paginateItem = computed(() => {
+    const startIndex = (currentPage.value - 1) * pageSize.value;
+    return props.users.slice(startIndex, startIndex + pageSize.value);
+})
 
 const prevPage = () => {
-    if (currentPage.value > 1) currentPage.value--;
+    if (currentPage.value > 1) {
+        currentPage.value--;
+        userStore.page--;
+    }
 };
 const nextPage = () => {
-    if (currentPage.value < totalPages.value) currentPage.value++;
+    if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+        userStore.page++;
+    }
 };
 const islastRow = () => {
     return showInfo.value === paginatedItems.value.length - 1 || showInfo.value === paginatedItems.value.length - 2
         && showInfo.value != 0;
 }
 </script>
-
 
 <template>
     <div class="overflow-auto">
@@ -79,7 +91,7 @@ const islastRow = () => {
                 </th>
             </thead>
             <tbody class="text-center relative text-primary" ref="tableBody">
-                <tr v-for="(item, index) in paginatedItems" :key="index" class="h-20 odd:bg-white even:bg-gray-100">
+                <tr v-for="(item, index) in paginateItem" :key="index" class="h-20 odd:bg-white even:bg-gray-100">
                     <td class="py-2 px-4">{{ (currentPage - 1) * pageSize + index + 1 }}</td>
                     <td class="py-2 px-4 capitalize">{{ item.name }}</td>
                     <td class="py-2 px-4">{{ item.email }}</td>
@@ -109,6 +121,6 @@ const islastRow = () => {
             </tbody>
         </table>
     </div>
-    <Pagination :show="users.length > 6" :currentPage="currentPage" :totalPages="totalPages" :nextPage="nextPage"
+    <Pagination :show="users.length > pageSize" :currentPage="currentPage" :totalPages="totalPages" :nextPage="nextPage"
         :prevPage="prevPage" />
 </template>

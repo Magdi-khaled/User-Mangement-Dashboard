@@ -1,46 +1,46 @@
 <script setup lang="ts">
 import AppInput from "../AppInput.vue";
-
 import { watch, ref, defineEmits } from "vue";
+import { useUserStore } from "../../stores/users";
 import type { User } from "../../types/user";
+const userStore = useUserStore();
 
+let filterResults = ref<User[]>([]);
 const searchText = ref<string>("");
-const searchStatus = ref<boolean>(false);
+const searchLoading = ref<boolean>(false);
 const selectedRole = ref<string>("");
 const selectedStatus = ref<string>("");
 
-// Props & emits
-const props = defineProps<{ users: User[] }>();
 const emit = defineEmits(["update:filteredArray"]);
 
-const filterUsers = () => {
-    let filterResults = props.users;
+// Debounce variables
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
+const filterUsers = async () => {
     if (searchText.value) {
-        filterResults = filterResults.filter(
-            (item) =>
-                item.name.toLowerCase().includes(searchText.value.toLowerCase()) ||
-                item.email.toLowerCase().includes(searchText.value.toLowerCase())
-        );
+        filterResults.value = await userStore.fetchUsers(searchText.value);
     }
     if (selectedRole.value) {
-        filterResults = filterResults.filter((item) => item.role === selectedRole.value);
+        filterResults.value = filterResults.value.filter((item) => item.role === selectedRole.value);
     }
     if (selectedStatus.value) {
-        filterResults = filterResults.filter((item) => item.status === selectedStatus.value);
+        filterResults.value = filterResults.value.filter((item) => item.status === selectedStatus.value);
     }
-
-    emit("update:filteredArray", filterResults);
+    emit("update:filteredArray", filterResults.value);
 };
 
-// Watchers to trigger filtering
+// Watchers to trigger filtering with debounce
 watch([searchText, selectedRole, selectedStatus], () => {
-    searchStatus.value = true;
-    setTimeout(() => {
-        searchStatus.value = false;
+    searchLoading.value = true;
+    // Clear any previous timer before starting a new one
+    if (debounceTimer) clearTimeout(debounceTimer);
+    // Set a new timeout (debounced)
+    debounceTimer = setTimeout(() => {
+        searchLoading.value = false;
         filterUsers();
-    }, 500);
+    }, 1000);
 });
+
 </script>
 
 <template>
@@ -48,25 +48,25 @@ watch([searchText, selectedRole, selectedStatus], () => {
         <div class="relative col-span-2">
             <AppInput type="text" name="search" placeholder="Search by name, email..." :optional="true"
                 v-model="searchText" />
-            <i v-if="!searchStatus"
+            <i v-if="!searchLoading"
                 class="fa-solid fa-magnifying-glass text-sm sm:text-md text-highlight absolute left-[2%] sm:left-[1%] top-[30%]"></i>
-            <Loading v-else class="absolute left-[1%] top-[35%]" />
+            <Loading v-else class="absolute left-[0.5%] top-[25%]" />
         </div>
-        <AppInput name="sortRole" type="select" optionsType="Sort by role..." :options="['admin', 'manager', 'viewer']"
-            v-model:modelValue="selectedRole" class="col-span-2 sm:col-span-1" />
 
+        <AppInput name="sortRole" type="select" optionsType="Sort by role..." :options="['admin', 'manager', 'viewer']"
+            v-model="selectedRole" class="col-span-2 sm:col-span-1" />
 
         <AppInput name="sortState" type="select" optionsType="Sort by status..." :options="['active', 'not active']"
-            v-model:modelValue="selectedStatus" class="col-span-2 sm:col-span-1" />
+            v-model="selectedStatus" class="col-span-2 sm:col-span-1" />
     </div>
 </template>
+
 <style scoped>
 :deep(input) {
     padding-left: 2rem;
 }
 
 @media (max-width:536px) {
-
     :deep(input) {
         padding-left: 1.5rem;
     }
