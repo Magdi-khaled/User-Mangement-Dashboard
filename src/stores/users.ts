@@ -11,20 +11,20 @@ export const useUserStore = defineStore("users", {
     users: users as User[],
   }),
   actions: {
-    async fetchUsers(search = "") {
+    async fetchUsers(query = "") {
       try {
         await apiDelay();
-        console.log(search);
-        // const response = axios.get("/api/get/users");
+        console.log(query);
+        // const response = axios.get(`/api/get/users/:${query}`);
         // this.users = response.data;
         let filteredUsers: User[] = [...this.users];
 
         // Filtering
-        if (search) {
+        if (query) {
           filteredUsers = filteredUsers.filter(
             (user) =>
-              user.name.toLowerCase().includes(search.toLowerCase()) ||
-              user.email.toLowerCase().includes(search.toLowerCase())
+              user.name.toLowerCase().includes(query.toLowerCase()) ||
+              user.email.toLowerCase().includes(query.toLowerCase())
           );
         }
 
@@ -36,7 +36,7 @@ export const useUserStore = defineStore("users", {
     async createUser(newUser: Omit<User, "id">) {
       try {
         await apiDelay();
-        // const response = axios.post("/api/get/users",newUser);
+        // const response = axios.post("/api/users",newUser);
         const id = this.users.length + 1;
         const user = { id, ...newUser };
         this.users.push(user);
@@ -47,7 +47,7 @@ export const useUserStore = defineStore("users", {
     async editUser(id: number, name: string, role: string, status: string) {
       try {
         await apiDelay();
-        // const response = axios.post("/api/get/users/:id",newUser);
+        // const response = axios.post(`/api/users/:${id}`, newUser);
 
         const userIndex = this.users.findIndex((u) => u.id === id);
 
@@ -65,7 +65,7 @@ export const useUserStore = defineStore("users", {
       try {
         await apiDelay();
 
-        // const response = axios.delete("/api/get/users/:id");
+        // const response = axios.delete("/api/users/:${id}");
         const userIndex = this.users.findIndex((u) => u.id === id);
         if (userIndex === -1) {
           console.error("User Not Found");
