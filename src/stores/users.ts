@@ -36,6 +36,7 @@ export const useUserStore = defineStore("users", {
     async createUser(newUser: Omit<User, "id">) {
       try {
         await apiDelay();
+        // const response = axios.post("/api/get/users",newUser);
         const id = this.users.length + 1;
         const user = { id, ...newUser };
         this.users.push(user);
@@ -46,8 +47,8 @@ export const useUserStore = defineStore("users", {
     async editUser(id: number, name: string, role: string, status: string) {
       try {
         await apiDelay();
-        console.log(name);
-        
+        // const response = axios.post("/api/get/users/:id",newUser);
+
         const userIndex = this.users.findIndex((u) => u.id === id);
 
         if (userIndex !== -1) {
@@ -64,6 +65,7 @@ export const useUserStore = defineStore("users", {
       try {
         await apiDelay();
 
+        // const response = axios.delete("/api/get/users/:id");
         const userIndex = this.users.findIndex((u) => u.id === id);
         if (userIndex === -1) {
           console.error("User Not Found");

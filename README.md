@@ -169,27 +169,6 @@ To preview the production build:
 npm run preview
 ```
 
-## Project Structure
-
-After setting up, your project structure should look like this:
-
-```
-my-vue-app/
-├── src/
-│   ├── components/
-│   ├── views/
-│   ├── router/
-│   ├── stores/
-│   ├── main.ts
-│   ├── App.vue
-│   ├── index.css
-├── public/
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-├── tailwind.config.js
-```
-
 ## Notes
 
 - **Pinia** is used for state management.

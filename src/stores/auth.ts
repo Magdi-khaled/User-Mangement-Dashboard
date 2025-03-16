@@ -1,9 +1,7 @@
 import { defineStore } from "pinia";
 import type { AuthState } from "../types/auth";
 import { users } from "../composables/useUsers";
-
 import { setTokensetToken } from "../composables/useToken";
-
 import { isAuthenticated, getUserRole } from "../composables/useAuth";
 import axios from "axios";
 
@@ -27,6 +25,8 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async login(email: string, password: string) {
       try {
+        // const response = await axios.post('/api/users/login',
+        //     {email,password});
         const existUser = await users.find(
           (user) => email == user.email && password == user.password
         );
