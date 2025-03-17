@@ -40,15 +40,17 @@ To clone this project and set it up, run the following commands:
 ```sh
 # Clone the repository
 git clone <repository_url>
+- reoisitory_url : https://github.com/Magdi-khaled/User-Mangement-Dashboard
 
 # Navigate into the project directory
 cd diverge-assesment
 
 # Install dependencies
-npm install
+1) npm install
+2) npm install @tailwindcss/vite axios pinia tailwindcss vee-validate vue-router yup
 ```
 
-Then, follow the setup instructions below.
+---
 
 ## Project Setup
 
