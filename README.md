@@ -48,6 +48,11 @@ cd diverge-assesment
 # Install dependencies
 1) npm install
 2) npm install @tailwindcss/vite axios pinia tailwindcss vee-validate vue-router yup
+
+# Testing Accounts :
+Admin : email: 2@um.com ,pass: 1234
+Manager : email: 16@um.com ,pass: 1234
+Viewer : email: 1@um.com ,pass: 1234
 ```
 
 ---
